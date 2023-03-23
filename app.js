@@ -9,18 +9,17 @@ app.use(express.json());
 
 mongoose.connect(process.env.DATABASE_URL);
 
-app.get('/tasks',  (req, res) => {
+app.get('/tasks', async (req, res) => {
   /** 쿼리 목록
    *  - count: 아이템 개수
    *  - sort: 정렬
    */
-  throw new Error('borken');
-  // const count = Number(req.query.count) || 0;
-  // const sort = req.query.sort || 'newest';
-  // const tasks = await Task.find()
-  //   .limit(count)
-  //   .sort([['createdAt', sort === 'newest' ? 'desc' : 'asc']]);
-  // res.send(tasks);
+  const count = Number(req.query.count) || 0;
+  const sort = req.query.sort || 'newest';
+  const tasks = await Task.find()
+    .limit(count)
+    .sort([['createdAt', sort === 'newest' ? 'desc' : 'asc']]);
+  res.send(tasks);
 });
 
 app.get('/tasks/:id', async (req, res) => {
