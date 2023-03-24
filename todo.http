@@ -2,7 +2,7 @@ GET http://localhost:3000/tasks
 
 ### 
 
-GET http://localhost:3000/tasks?sort=oldest
+GET http://localhost:3000/tasks?count=3&sort=oldest
 
 ###
 

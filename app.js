@@ -15,10 +15,9 @@ app.get('/tasks', async (req, res) => {
    *  - sort: 정렬
    */
   const count = Number(req.query.count) || 0;
-  const sort = req.query.sort || 'newest';
-  const tasks = await Task.find()
-    .limit(count)
-    .sort([['createdAt', sort === 'newest' ? 'desc' : 'asc']]);
+  const sortOption =
+    req.query.sort === 'oldest' ? ['createdAt', 'asc'] : ['createdAt', 'desc'];
+  const tasks = await Task.find().limit(count).sort([sortOption]);
   res.send(tasks);
 });
 
@@ -27,7 +26,7 @@ app.get('/tasks/:id', async (req, res) => {
   if (task) {
     res.send(task);
   } else {
-    res.status(404).send({ message: 'Task not found' });
+    res.status(404).send({ message: '해당 id를 찾을 수 없습니다.' });
   }
 });
 
@@ -46,7 +45,7 @@ app.patch('/tasks/:id', async (req, res) => {
     await task.save();
     res.send(task);
   } else {
-    res.status(404).send({ message: 'Task not found' });
+    res.status(404).send({ message: '해당 id를 찾을 수 없습니다.' });
   }
 });
 
@@ -55,7 +54,7 @@ app.delete('/tasks/:id', async (req, res) => {
   if (task) {
     res.sendStatus(200);
   } else {
-    res.status(404).send({ message: 'Task not found' });
+    res.status(404).send({ message: '해당 id를 찾을 수 없습니다.' });
   }
 });
 
