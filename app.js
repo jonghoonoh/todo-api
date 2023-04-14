@@ -1,61 +1,28 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
 import express from 'express';
-import mongoose from 'mongoose';
-import Task from './task.js';
+import tasks from './data/mock.js';
 
 const app = express();
-app.use(express.json());
 
-mongoose.connect(process.env.DATABASE_URL);
-
-app.get('/tasks', async (req, res) => {
-  /** 쿼리 목록
-   *  - count: 아이템 개수
-   *  - sort: 정렬
+app.get('/tasks', (req, res) => {
+  /** 쿼리 파라미터
+   *  - sort: 'oldest'인 경우 오래된 태스크 기준, 나머지 경우 새로운 태스크 기준
+   *  - count: 태스크 개수
    */
-  const count = Number(req.query.count) || 0;
-  const sortOption =
-    req.query.sort === 'oldest' ? ['createdAt', 'asc'] : ['createdAt', 'desc'];
-  const tasks = await Task.find().limit(count).sort([sortOption]);
-  res.send(tasks);
-});
+  const sort = req.query.sort;
+  const count = Number(req.query.count);
 
-app.get('/tasks/:id', async (req, res) => {
-  const task = await Task.findById(req.params.id);
-  if (task) {
-    res.send(task);
-  } else {
-    res.status(404).send({ message: '해당 id를 찾을 수 없습니다.' });
+  const sortFn =
+    sort === 'oldest'
+      ? (a, b) => a.createdAt - b.createdAt
+      : (a, b) => b.createdAt - a.createdAt;
+
+  let newTasks = tasks.sort(sortFn);
+
+  if (count) {
+    newTasks = newTasks.slice(0, count);
   }
+
+  res.send(newTasks);
 });
 
-app.post('/tasks', async (req, res) => {
-  const newTask = await Task.create(req.body);
-  res.send(newTask);
-});
-
-app.patch('/tasks/:id', async (req, res) => {
-  const task = await Task.findById(req.params.id);
-  if (task) {
-    const { body } = req;
-    Object.keys(body).forEach((key) => {
-      task[key] = body[key];
-    });
-    await task.save();
-    res.send(task);
-  } else {
-    res.status(404).send({ message: '해당 id를 찾을 수 없습니다.' });
-  }
-});
-
-app.delete('/tasks/:id', async (req, res) => {
-  const task = await Task.findByIdAndDelete(req.params.id);
-  if (task) {
-    res.sendStatus(200);
-  } else {
-    res.status(404).send({ message: '해당 id를 찾을 수 없습니다.' });
-  }
-});
-
-app.listen(process.env.PORT || 3000, () => console.log('Server Started'));
+app.listen(3000, () => console.log('Server Started'));
