@@ -38,13 +38,38 @@ app.get('/tasks/:id', (req, res) => {
 
 app.post('/tasks', (req, res) => {
   const newTask = req.body;
-  const ids = tasks.map((task) => task.id)
+  const ids = tasks.map((task) => task.id);
   newTask.id = Math.max(...ids) + 1;
   newTask.isComplete = false;
   newTask.createdAt = new Date();
   newTask.updatedAt = new Date();
   tasks.push(newTask);
-  res.send(newTask);
+  res.status(201).send(newTask);
+});
+
+app.patch('/tasks/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const task = tasks.find((task) => task.id === id);
+
+  if (task) {
+    Object.keys(req.body).forEach((key) => {
+      task[key] = req.body[key];
+    });
+    res.send(task);
+  } else {
+    res.status(404).send({ message: '해당 id를 찾을 수 없습니다.' });
+  }
+});
+
+app.delete('/tasks/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const idx = tasks.findIndex((task) => task.id === id);
+  if (idx >= 0) {
+    tasks.splice(idx, 1);
+    res.sendStatus(204);
+  } else {
+    res.status(404).send({ message: '해당 id를 찾을 수 없습니다.' });
+  }
 });
 
 app.listen(3000, () => console.log('Server Started'));
