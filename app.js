@@ -1,5 +1,9 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import tasks from './data/mock.js';
+import { DATABASE_URL } from './constants.js';
+
+mongoose.connect(DATABASE_URL).then(() => console.log('Connected to DB'));
 
 const app = express();
 app.use(express.json());
