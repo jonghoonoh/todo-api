@@ -6,7 +6,7 @@ GET http://localhost:3000/tasks?sort=oldest&count=3
 
 ###
 
-GET http://localhost:3000/tasks/1
+GET http://localhost:3000/tasks/643e34cf11391ffa9e43375
 
 ###
 
@@ -14,7 +14,7 @@ POST http://localhost:3000/tasks
 Content-Type: application/json
 
 {
-  "title": "강아지 산책",
+  "title": "아주 긴 제목 아주 긴 제목 아주 긴 제목 아주 긴 제목 아주 긴 제목 아주 긴 제목 아주 긴 제목 아주 긴 제목 아주 긴 제목",
   "description": "강아지랑 30분 산책하기"
 }
 
