@@ -1,9 +1,11 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import mongoose from 'mongoose';
-import { DATABASE_URL } from './env.js';
 import Task from './models/task.js';
 
-mongoose.connect(DATABASE_URL).then(() => console.log('Connected to DB'));
+mongoose.connect(process.env.DATABASE_URL).then(() => console.log('Connected to DB'));
 
 const app = express();
 app.use(express.json());
@@ -90,4 +92,4 @@ app.delete(
   })
 );
 
-app.listen(3000, () => console.log('Server Started'));
+app.listen(process.env.PORT, () => console.log('Server Started'));

@@ -9,6 +9,7 @@
   },
   "type": "module",
   "scripts": {
+    "start": "node app.js",
     "dev": "nodemon app.js",
     "seed": "node data/seed.js"
   }
