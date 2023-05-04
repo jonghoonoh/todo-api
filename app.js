@@ -1,11 +1,17 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import { DATABASE_URL } from './env.js';
+import cors from 'cors';
 import Task from './models/task.js';
 
-mongoose.connect(DATABASE_URL).then(() => console.log('Connected to DB'));
+mongoose.connect(process.env.DATABASE_URL).then(() => console.log('Connected to DB'));
 
 const app = express();
+
+const corsOptions = {
+  origin: 'http://127.0.0.1:5500',
+}
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 function asyncHandler(handler) {
@@ -90,4 +96,4 @@ app.delete(
   })
 );
 
-app.listen(3000, () => console.log('Server Started'));
+app.listen(process.env.PORT, () => console.log('Server Started'));
